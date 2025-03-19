@@ -4,6 +4,7 @@ namespace Controller;
 require_once 'read.php';
 require_once 'post.php';
 require_once 'read_one.php';
+require_once 'update.php';
 
 // include database and object files
 include_once __DIR__.'/../objects/product.php';
@@ -34,13 +35,16 @@ class categoryController{
                 {
                     \Read\handleGet();
                 }
-                break;
+            break;
             case 'POST':
-                    \Post\handlePost($this->data);
-                break;    
+                \Post\handlePost($this->data);
+            break;    
+            case 'PUT':
+                \Update\handleUpdate($this->data);
+            break;    
             default:
                 echo json_encode(['message' => 'Invalid request method']);
-                break;
+            break;
         }
     }
     

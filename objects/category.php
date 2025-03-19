@@ -14,7 +14,7 @@ class Category{
     public $name;
     public $description;
     public $created;
-    public $listOfProducts;
+
   
     // constructor with $db as database connection
     // public function __construct($db){
@@ -89,7 +89,36 @@ class Category{
                 $this->created = $row['created'];
             }
         }
-    }   
+    }
+    
+         function update(){
+                $query = "UPDATE {$this->table_name} SET name=:name, description=:description WHERE id=:category_id";
+        
+                $stmt = $this->conn->prepare($query);
+        
+                // sanitize
+                $this->id=htmlspecialchars(strip_tags($this->id));
+                $this->name=htmlspecialchars(strip_tags($this->name));
+       
+                $this->description=htmlspecialchars(strip_tags($this->description));
+             
+                
+         // bind values
+                $stmt->bindParam(":category_id", $this->id);
+                $stmt->bindParam(":name", $this->name);
+               
+                $stmt->bindParam(":description", $this->description);
+              
+        
+                try{
+                    return $stmt->execute();
+                }
+                catch  (\PDOException $e){
+                    echo "Error updating: ".$e->getMessage();
+                    die();
+                }
+                   
+            }
 }
 
 //     function deleteOne(){
@@ -109,32 +138,6 @@ class Category{
          
 //     }
 
-//     function update(){
-//         $query = "UPDATE {$this->table_name} SET name=:name,
-//         category_id=:category_id, price=:price, description=:description";
 
-//         $stmt = $this->conn->prepare($query);
-
-//         // sanitize
-//         $this->name=htmlspecialchars(strip_tags($this->name));
-//         $this->price=htmlspecialchars(strip_tags($this->price));
-//         $this->description=htmlspecialchars(strip_tags($this->description));
-//         $this->category_id=htmlspecialchars(strip_tags($this->category_id));
-        
-//         // bind values
-//         $stmt->bindParam(":name", $this->name);
-//         $stmt->bindParam(":price", $this->price);
-//         $stmt->bindParam(":description", $this->description);
-//         $stmt->bindParam(":category_id", $this->category_id);
-
-//         try{
-//             return $stmt->execute();
-//         }
-//         catch  (\PDOException $e){
-//             echo "Error updating: ".$e->getMessage();
-//             die();
-//         }
-           
-//     }
   
 

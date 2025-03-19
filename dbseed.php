@@ -1,6 +1,8 @@
 <?php
+use Config\Database;
+require_once "database.php";
 // drop datbase and then run php dbseed.php 
-require 'bootstrap.php';
+
 
 $statement = <<<EOS
 CREATE TABLE IF NOT EXISTS `products` (
@@ -12,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `products` (
 `created` datetime NOT NULL,
 `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=65 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
    INSERT INTO `products` (`id`, `name`, `description`, `price`, `category_id`, `created`, `modified`) VALUES(1, 'LG P880 4X HD', 
    'My first awesome phone!', '336', 3, '2014-06-01 01:12:26', '2014-05-31 17:12:26'),(2, 
@@ -32,7 +34,7 @@ PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
 
 
-INSERT INTO `categories` (`id`, `name`, `description`, `created`, `modified`) VALUES(1, 'Fashion', 'Category for anything related to fashion.', 
+INSERT INTO `categories` (id, `name`, `description`, `created`, `modified`) VALUES(1, 'Fashion', 'Category for anything related to fashion.', 
 '2014-06-01 00:35:07', '2014-05-30 17:34:33'),(2, 'Electronics', 'Gadgets, drones and more.', '2014-06-01 00:35:07', '2014-05-30 17:34:33'),(3, 
 'Motors', 'Motor sports and more', '2014-06-01 00:35:07', '2014-05-30 17:34:54'),(5, 'Movies', 'Movie products.', '2016-01-08 13:27:26', '2016-01-08 13:27:26'),(6, 
 'Books', 'Kindle books, audio books and more.', '2016-01-08 13:27:47', '2016-01-08 13:27:47'),(13, 'Sports', 'Drop into new winter gear.', '2016-01-09 02:24:24',
@@ -40,6 +42,8 @@ INSERT INTO `categories` (`id`, `name`, `description`, `created`, `modified`) VA
 EOS;
 
 try {
+    $database = new Database();
+    $dbConnection = $database->getConnection();
     $createTable = $dbConnection->exec($statement);
     echo "Success!\n";
 } catch (\PDOException $e) {
