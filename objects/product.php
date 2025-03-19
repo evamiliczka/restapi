@@ -72,6 +72,23 @@ class Product{
         return $stmt->execute();
     } 
 
+    //this function should be static...!!!
+    function readAllProductsFromCategory($categoryId){
+        try{
+            $query = "SELECT id, name, price, description, created FROM products WHERE category_id=:categoryId";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(":categoryId", $categoryId);
+            $stmt->execute();
+           
+            return $stmt;
+        }
+        catch (\PDOException $e){
+            echo "Error retrieving products from a category: ".$e->getMessage();
+            die();
+        }
+
+    }
+
     function readOne(){
         $query = "SELECT c.name as category_name, p.id, p.name, p.description, p.price, p.category_id, p.created
               FROM  {$this->table_name} p LEFT JOIN categories c ON p.category_id = c.id 

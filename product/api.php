@@ -19,9 +19,19 @@ $data = json_decode(file_get_contents('php://input'));
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 
 $id = null;
-$uriLastElement = $uri[count($uri) - 1];
-if (isset($uriLastElement) && intval($uriLastElement) != 0) {
-    $id = intval($uriLastElement);
+$uriLastElement = $uri[4];
+if (isset($uriLastElement))
+{
+    // if last elment is set, it must be a number = an id
+    if (intval($uriLastElement) != 0)
+         {
+            $id = intval($uriLastElement);
+        }
+    else{
+        http_response_code(400); //bad request
+        echo json_encode(['message' => 'Bad request, expected /restapi/product/{id} where id is an integer']);
+        die();
+    }
 }
 
 // var_dump($uri);
@@ -32,16 +42,12 @@ if (isset($uriLastElement) && intval($uriLastElement) != 0) {
 // }
 
 
-// for now all of our endpoints start with /product
-// everything else results in a 404 Not Found
-if ($uri[2] == 'product') {
-    // pass the request method and user ID to the PersonController:
+try{
     $controller = new productController($requestMethod, $id, $data);
     $controller->processRequest();
 }
-else
-{ 
-    header("HTTP/1.1 404 Not Found");
+catch (\PDOException $e){
+    echo json_encode(array("message" => $e->getMessage()));
     exit();
 }
 
