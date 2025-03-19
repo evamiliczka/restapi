@@ -1,6 +1,7 @@
 <?php
-require 'database.php';
-include_once __DIR__.'/./product/productController.php';
+use Controller\productController;
+require_once __DIR__.'/../database.php';
+require_once 'productController.php';
 
 
 
@@ -23,20 +24,26 @@ if (isset($uriLastElement) && intval($uriLastElement) != 0) {
     $id = intval($uriLastElement);
 }
 
-// for now all of our endpoints start with /product
-// everything else results in a 404 Not Found
-// if ($uri[4] !== 'product') {
-//     header("HTTP/1.1 404 Not Found");
-//     exit();
-// }
+// var_dump($uri);
 // authenticate the request with Okta:
 // if (! authenticate()) {
 //     header("HTTP/1.1 401 Unauthorized");
 //     exit('Unauthorized');
 // }
-// pass the request method and user ID to the PersonController:
-$controller = new productController($requestMethod, $id, $data);
-$controller->processRequest();
+
+
+// for now all of our endpoints start with /product
+// everything else results in a 404 Not Found
+if ($uri[2] == 'product') {
+    // pass the request method and user ID to the PersonController:
+    $controller = new productController($requestMethod, $id, $data);
+    $controller->processRequest();
+}
+else
+{ 
+    header("HTTP/1.1 404 Not Found");
+    exit();
+}
 
 
 

@@ -1,4 +1,6 @@
 <?php
+namespace Controller;
+
 require_once 'read.php';
 require_once 'read_one.php';
 require_once 'post.php';
@@ -33,31 +35,32 @@ class productController{
 
     public function processRequest(){
 
-    switch ($this->requestMethod) {
-        case 'GET':
-            if ($this->productId)
-            {
-                \Read\handleReadOne($this->productId);
-            }
-            else{
-                \Read\handleGet();
-            }
-            break;
-        case 'POST':
-            \Post\handlePost($this->data);
-            break;
-        case 'DELETE':
-            \Delete\handleDeleteOne($this->productId);
-            break;
-        case 'PUT':
-            \Update\handleUpdate($this->data);
-            break;
-        //we expect /product/{id} to retrieve single product with the corresponding id
-        default:
-            echo json_encode(['message' => 'Invalid request method']);
-            break;
+        switch ($this->requestMethod) {
+            case 'GET':
+                if ($this->productId)
+                {
+                    \Read\handleReadOne($this->productId);
+                }
+                else{
+                    \Read\handleGet();
+                }
+                break;
+            case 'POST':
+                \Post\handlePost($this->data);
+                break;
+            case 'DELETE':
+                \Delete\handleDeleteOne($this->productId);
+                break;
+            case 'PUT':
+                \Update\handleUpdate($this->data);
+                break;
+            //we expect /product/{id} to retrieve single product with the corresponding id
+            default:
+                echo json_encode(['message' => 'Invalid request method']);
+                break;
+        }
     }
-    }
+    
 }
 
 
