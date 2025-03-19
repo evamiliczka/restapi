@@ -131,17 +131,19 @@ class Product{
 
     function update(){
         $query = "UPDATE {$this->table_name} SET name=:name,
-        category_id=:category_id, price=:price, description=:description";
+        category_id=:category_id, price=:price, description=:description WHERE id=:productId";
 
         $stmt = $this->conn->prepare($query);
 
         // sanitize
+        $this->name=htmlspecialchars(strip_tags($this->id));
         $this->name=htmlspecialchars(strip_tags($this->name));
         $this->price=htmlspecialchars(strip_tags($this->price));
         $this->description=htmlspecialchars(strip_tags($this->description));
         $this->category_id=htmlspecialchars(strip_tags($this->category_id));
         
         // bind values
+        $stmt->bindParam(":productId", $this->id);
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":price", $this->price);
         $stmt->bindParam(":description", $this->description);

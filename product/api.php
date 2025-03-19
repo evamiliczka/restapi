@@ -19,21 +19,21 @@ $data = json_decode(file_get_contents('php://input'));
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 
 $id = null;
-$uriLastElement = $uri[4];
-if (isset($uriLastElement))
+
+
+if (isset($uri[4]))
 {
     // if last elment is set, it must be a number = an id
-    if (intval($uriLastElement) != 0)
+    if (empty($uri[4]) || intval($uri[4]) !== 0)
          {
-            $id = intval($uriLastElement);
+            if (intval($uri[4]) !== 0) $id = intval($uri[4]);
         }
     else{
         http_response_code(400); //bad request
-        echo json_encode(['message' => 'Bad request, expected /restapi/product/{id} where id is an integer']);
+        echo json_encode(['message' => 'Bad request expected /restapi/product/{id} where id is an integer']);
         die();
     }
 }
-
 // var_dump($uri);
 // authenticate the request with Okta:
 // if (! authenticate()) {

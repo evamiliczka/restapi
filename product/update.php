@@ -11,6 +11,7 @@ function handleUpdate($data){
     if (!empty($data->id) && 
     !empty($data->name) && !empty($data->price) && !empty($data->description) && !empty($data->category_id))
     {
+        $product->id = $data->id;
         $product->name = $data->name;
         $product->price = $data->price;
         $product->description = $data->description;

@@ -1,14 +1,14 @@
 <?php
 namespace Read;
 
-use PDO;
+
 
 use Models\Category;
-use Models\Product;
+
 // // include database and object files
 //include_once '../database.php';
 include_once __DIR__.'/../objects/category.php';
-
+include_once 'read_all_products_from_category.php';
   
 
 function handleReadOne($categoryId){
@@ -17,46 +17,26 @@ function handleReadOne($categoryId){
    
     $category->id = $categoryId;
 
-
     // one category should be here
     $category->readOne();
     
     if ($category->name !=null){
-        $categories_arr = array (
+        $category_item = array (
             "id" => $category->id,
             "name" => $category->name,
             "description" => $category->description,
             "created" => $category->created,
         );
 
-        $product = new Product();
-        $stmt = $product->readAllProductsFromCategory($categoryId);
-        $num = $stmt->rowCount();
-        //echo($num);
-        //var_dump($stmt->fetchAll(PDO::FETCH_ASSOC));
-        $products_arr=[];
-        if ($num > 0) {
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
-            {
-             //   var_dump('snehuliak:', $row);
-                extract($row);
-                $product_item=array(
-                    "id" => $id,
-                    "name" => $name,
-                    "description" => html_entity_decode($description),
-                    "price" => $price,
-                );
-                array_push($products_arr, $product_item);
-            }
-        }
-      $categories_arr["products_in_this_category"] = $products_arr;
+      $products_arr =  handleGetAllProductsFromCategory($categoryId);
+      $category_item["product_count"] = count($products_arr);
+      $category_item["products_in_category"] = $products_arr;
 
         http_response_code(200);
-        echo json_encode($categories_arr);
+        echo json_encode($category_item);
     }
     else{// set response code - 404 Not found
         http_response_code(404);
         echo json_encode(array("message" => "Category {$categoryId} does not exist."));}
     
 }
-?>
