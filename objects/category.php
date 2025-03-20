@@ -180,25 +180,68 @@ class Category{
             die(); // Or log the error instead of displaying it
         }
         } //update
+    
+
+
+    function deleteOne($categoryId){
+        if ($categoryId){
+            $this->id=htmlspecialchars(strip_tags($categoryId));
+           
+
+            // we only delete category if there are no products in the category
+            try{
+                //does this category exit?
+                $query ="SELECT COUNT(*) FROM {$this->table_name} WHERE id=:categoryId";
+                $stmt = $this->conn->prepare($query);
+
+                $stmt->bindParam(":categoryId",$this->id);
+                $stmt->execute();
+                // if category exists
+               
+                if ($stmt->fetchColumn() !== 0)
+                {
+                    // category  exists
+                    $querySelect = "SELECT COUNT(*) FROM products WHERE category_id=:categoryId";
+                    $stmt = $this->conn->prepare($querySelect);
+                    $stmt->bindParam(":categoryId", $this->id);
+                    $stmt->execute();
+                    if ($stmt->fetchColumn() == 0){
+                        //there are no porducts in category so it can be safely deleted
+                        $query ="DELETE  FROM {$this->table_name} WHERE id=:categoryId";
+                        $stmt = $this->conn->prepare($query);
+                        $stmt->bindParam(":categoryId", $this->id);
+                        return $stmt->execute();
+                    }
+                    else{
+                        http_response_code(409); //conflict
+                        echo json_encode(array("message" => "Unable to delete category. Category is not empty"));
+                        return false;
+                    }
+                }
+                else{ 
+                    //category does not exist, so it is already deleted
+                    http_response_code(200);
+                    return true; 
+                    }
+
+            }
+            catch (\PDOException $e){
+             
+               
+                echo json_encode(array("message" => "Delete failed:  {$e->getMessage()}"));
+                die(); // Or log the error instead of displaying it
+            }
+        }
+        else //no id is given
+        {
+            http_response_code(400);
+            echo json_encode(array("Message"=>"Bad request - ID of category is not given"));
+            return false;
+        }
+         
     }
 
-//     function deleteOne(){
-//         $query ="DELETE  FROM {$this->table_name} WHERE id=:id";
-//         $stmt = $this->conn->prepare($query);
 
-//         $stmt->bindParam(":id",$this->id);
-
-//         try {
-//             return $stmt->execute();
-//         }
-//         catch (\PDOException $e){
-//             echo "Error deleting: ".$e->getMessage();
-//             die();
-            
-//         }
-         
-//     }
-
-
+    }
   
 

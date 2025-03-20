@@ -35,7 +35,10 @@ class categoryController{
             break;    
             case 'PUT':
                $this->handleUpdate();
-            break;    
+            break;  
+            case 'DELETE':
+                $this->handleDelete();
+             break;     
             default:
                 http_response_code(405);
                 echo json_encode(array('Message' => "Method {$this->requestMethod} Not Allowed"));
@@ -66,6 +69,15 @@ class categoryController{
                 http_response_code(201); //created
                 echo  json_encode(array('Message' => "Category created"));
             }
+        }
+
+        private function handleDelete(){
+            $category = new Category();  
+            if ($category->deleteOne($this->categoryId)){
+                http_response_code(200); //ok
+                echo  json_encode(array('Message' => "Category deleted"));
+            }
+           
         }
     }
     
