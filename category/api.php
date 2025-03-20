@@ -51,6 +51,7 @@ try{
     $controller->processRequest();
 }
 catch (\PDOException $e){
+    http_response_code($e->getCode()); 
     echo json_encode(array("message" => $e->getMessage()));
     exit();
 }

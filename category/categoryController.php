@@ -1,15 +1,9 @@
 <?php
 namespace Controller;
 
-require_once 'read.php';
-require_once 'post.php';
-require_once 'read_one.php';
-require_once 'update.php';
+use Models\Category;
 
-// include database and object files
-include_once __DIR__.'/../objects/product.php';
-//include_once __DIR__ .'/../database.php';
-
+include_once __DIR__.'/../objects/category.php';
 
 class categoryController{
 
@@ -29,26 +23,53 @@ class categoryController{
             case 'GET':
                 if ($this->categoryId)
                 {
-                    \Read\handleReadOne($this->categoryId);
+                    $this->handleGetOne();
                 }
                 else
                 {
-                    \Read\handleGet();
+                    $this->handleGet();
                 }
             break;
             case 'POST':
-                \Post\handlePost($this->data);
+                $this->handlePost();
             break;    
             case 'PUT':
-                \Update\handleUpdate($this->data);
+               $this->handleUpdate();
             break;    
             default:
-                echo json_encode(['message' => 'Invalid request method']);
+                http_response_code(405);
+                echo json_encode(array('Message' => "Method {$this->requestMethod} Not Allowed"));
             break;
         }
     }
+
+        private function handleUpdate(){
+            $category = new Category();
+            if ($category->update($this->data)) {
+                http_response_code(200);
+                echo  json_encode(array('Message' => "Category updated"));}
+        }
+
+        private function handleGet(){
+            $category = new Category();  
+            echo $category->read();
+        }
+
+        private function handleGetOne(){
+            $category = new Category();  
+            echo $category->readOne($this->categoryId);
+        }
+
+        private function handlePost(){
+            $category = new Category();  
+            if ($category->create($this->data)){
+                http_response_code(201); //created
+                echo  json_encode(array('Message' => "Category created"));
+            }
+        }
+    }
     
-}
+
 
 
 
