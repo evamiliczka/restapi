@@ -6,6 +6,8 @@ use  Models\Product;
 // include database and object files
 include_once __DIR__.'/../objects/product.php';
 
+
+
 class productController{
 
     private $requestMethod;
@@ -16,6 +18,7 @@ class productController{
         $this->requestMethod = $requestMethod;
         $this->productId    = $productId;
         $this->data = $data;
+        
     }
 
     public function processRequest(){

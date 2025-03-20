@@ -2,6 +2,8 @@
 namespace Models;
 use Config\Database;
 
+require_once 'product.php';
+
 use PDO;
 
 class Category{
@@ -46,8 +48,7 @@ class Category{
                             "created"=> $created
                         );
                         //now extract all products in a given category
-                    //    $products_arr = handleGetAllProductsFromCategory($category_item["id"]);
-                    $products_arr=[];
+                        $products_arr = Product::readAllProductsFromCategory($category_item["id"], $this->conn);
                         //and add their count and the array to the corresponfing category
                         $category_item["product_count"] = count($products_arr);
                         $category_item["products_in_category"] = $products_arr;
@@ -126,8 +127,8 @@ class Category{
                     "description" => $this->description,
                     "created" => $this->created,
                 );
-        //   $products_arr =  handleGetAllProductsFromCategory($categoryId);
-                $products_arr = [];
+                $products_arr = Product::readAllProductsFromCategory($category_item["id"], $this->conn);
+                
                 $category_item["product_count"] = count($products_arr);
                 $category_item["products_in_category"] = $products_arr;
                 http_response_code(200);

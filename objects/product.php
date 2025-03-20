@@ -157,21 +157,44 @@ class Product{
         }
     } //read
 
-  
-
-    //this function should be static...!!!
-    function readAllProductsFromCategory($categoryId){
+    
+    static function readAllProductsFromCategory($categoryId, $connection){
+        $categoryId = htmlspecialchars(strip_tags($categoryId));
         try{
             $query = "SELECT id, name, price, description, created FROM products WHERE category_id=:categoryId";
-            $stmt = $this->conn->prepare($query);
+            $stmt = $connection->prepare($query);
+
             $stmt->bindParam(":categoryId", $categoryId);
             $stmt->execute();
-           
-            return $stmt;
+            
+            $num = $stmt->rowCount();
+            //echo($num);
+            //var_dump($stmt->fetchAll(PDO::FETCH_ASSOC));
+            $products_arr=[];
+            if ($num > 0) {
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+                {
+                //   var_dump('snehuliak:', $row);
+                    extract($row);
+                    $product_item=array(
+                        "id" => $id,
+                        "name" => $name,
+                        "description" => html_entity_decode($description),
+                        "price" => $price,
+                    );
+                    array_push($products_arr, $product_item);
+                }
+            }
+            else{
+                return array();
+            }
+            return $products_arr;
         }
         catch (\PDOException $e){
+            http_response_code($e->getCode()); 
             echo "Error retrieving products from a category: ".$e->getMessage();
             die();
+          
         }
 
     }
