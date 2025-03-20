@@ -21,11 +21,6 @@ class Category{
     //     $this->conn = $db;
     // }
     public function __construct(){
-        // if ($id) $this->id = htmlspecialchars(strip_tags($id));
-        // if ($name) $this->name = htmlspecialchars(strip_tags($name));
-        // if ($description) $this->description = htmlspecialchars(strip_tags($description));
-        // if ($created) $this->created = htmlspecialchars(strip_tags($created));
-
         $database = new Database();
         $this->conn = $database->getConnection();
     }
@@ -99,7 +94,7 @@ class Category{
             }
             catch(\PDOException $e) {
                     http_response_code($e->getCode()); 
-                    return json_encode(array("message" => "Insert failed: {$e->getMessage()}"));
+                    return json_encode(array("message" => "Create failed: {$e->getMessage()}"));
                     die(); // Or log the error instead of displaying it
                 }
         } //if
@@ -134,11 +129,11 @@ class Category{
                 $category_item["product_count"] = count($products_arr);
                 $category_item["products_in_category"] = $products_arr;
                 http_response_code(200);
-                echo json_encode($category_item);
+                return json_encode($category_item);
             }
             else{// set response code - 404 Not found
                 http_response_code(404);
-                echo json_encode(array("message" => "Category {$categoryId} not found."));
+                return json_encode(array("message" => "Category {$categoryId} not found."));
             }
         }
         catch(\PDOException $e) {
@@ -149,36 +144,36 @@ class Category{
         }
     } //readOne
     
-         function update($data){
-            try{
-                if (!empty($data->id) && !empty($data->name)  && !empty($data->description))
-                {
-                    //prepare object
-                    $this->id=htmlspecialchars(strip_tags($data->id));
-                    $this->name=htmlspecialchars(strip_tags($data->name));
-                    $this->description=htmlspecialchars(strip_tags($data->description));
-                    //prepare query
-                    $query = "UPDATE {$this->table_name} SET name=:name, description=:description WHERE id=:category_id";     
-                    $stmt = $this->conn->prepare($query);
-                    // bind 
-                    $stmt->bindParam(":category_id", $this->id);
-                    $stmt->bindParam(":name", $this->name);
-                    $stmt->bindParam(":description", $this->description);
-                    
-                    return $stmt->execute();
-                }
-                else
-                {
-                    http_response_code(400);
-                    return json_encode(array("message" => "Unable to update category. Data is incomplete"));
-                }
+    function update($data){
+        try{
+            if (!empty($data->id) && !empty($data->name)  && !empty($data->description))
+            {
+                //prepare object
+                $this->id=htmlspecialchars(strip_tags($data->id));
+                $this->name=htmlspecialchars(strip_tags($data->name));
+                $this->description=htmlspecialchars(strip_tags($data->description));
+                //prepare query
+                $query = "UPDATE {$this->table_name} SET name=:name, description=:description WHERE id=:category_id";     
+                $stmt = $this->conn->prepare($query);
+                // bind 
+                $stmt->bindParam(":category_id", $this->id);
+                $stmt->bindParam(":name", $this->name);
+                $stmt->bindParam(":description", $this->description);
+                
+                return $stmt->execute();
             }
-            catch (\PDOException $e) {
-                // Handle error
-                http_response_code($e->getCode()); 
-                return json_encode(array("message" => "Update of category failed:  {$e->getMessage()}"));
-                die(); // Or log the error instead of displaying it
+            else
+            {
+                http_response_code(400);
+                return json_encode(array("message" => "Unable to update category. Data is incomplete"));
             }
+        }
+        catch (\PDOException $e) {
+            // Handle error
+            http_response_code($e->getCode()); 
+            return json_encode(array("message" => "Update of category failed:  {$e->getMessage()}"));
+            die(); // Or log the error instead of displaying it
+        }
         } //update
     }
 

@@ -1,20 +1,10 @@
 <?php
 namespace Controller;
-
-require_once 'read.php';
-require_once 'read_one.php';
-require_once 'post.php';
-require_once 'delete.php';
-require_once 'update.php';
+use  Models\Product;
 
 
 // include database and object files
 include_once __DIR__.'/../objects/product.php';
-
-include_once __DIR__ .'/../database.php';
-
-
-
 
 class productController{
 
@@ -23,40 +13,72 @@ class productController{
     private $data;
 
     public function __construct ($requestMethod, $productId, $data){
-       
         $this->requestMethod = $requestMethod;
         $this->productId    = $productId;
         $this->data = $data;
     }
 
     public function processRequest(){
-
         switch ($this->requestMethod) {
             case 'GET':
                 if ($this->productId)
                 {
-                    \Read\handleReadOne($this->productId);
+                    $this->handleGetOne();
                 }
                 else{
-                    \Read\handleGet();
+                    $this->handleGet();
                 }
                 break;
             case 'POST':
-                \Post\handlePost($this->data);
-                break;
+                    $this->handlePost();
+                break;  
             case 'DELETE':
-                \Delete\handleDeleteOne($this->productId);
+                $this->handleDeleteOne($this->productId);
                 break;
             case 'PUT':
-                \Update\handleUpdate($this->data);
-                break;
+                $this->handleUpdate();
+                break; 
             //we expect /product/{id} to retrieve single product with the corresponding id
             default:
                 echo json_encode(['message' => 'Invalid request method']);
                 break;
         }
     }
-    
+
+    private function handleGet(){
+        $product = new Product();  
+        echo $product->read();
+    }
+    private function handleGetOne(){
+            $product = new Product();  
+            echo $product->readOne($this->productId);
+    }
+
+    private function handlePost(){
+        $product = new Product();  
+        if ($product->create($this->data)){
+            http_response_code(201); //created
+            echo  json_encode(array('Message' => "Product created"));
+        }
+    }
+
+    private function handleUpdate(){
+        $product   = new Product();
+        if ($product->update($this->data)) {
+            http_response_code(200);
+            echo  json_encode(array('Message' => "Product updated"));}
+    }
+    private function handleDeleteOne(){
+
+        $product = new Product();  
+        if ($product->deleteOne($this->productId)) {
+            http_response_code(200);
+            echo  json_encode(array('Message' => "Product deleted"));
+        }
+        else{
+            echo  json_encode(array('Message' => "Something went wrong;"));
+        }
+    }
 }
 
 
