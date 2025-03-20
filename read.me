@@ -1,0 +1,40 @@
+This is a back-end REST API on a database with products and theri categories.
+
+We expect queries:
+    GET /restapi/product/api.php ..get all products
+    GET  /restapi/product/api.php/{id} .. get product with id
+    GET  /restapi/product/api.php?category={id} ... list all product from category id
+    POST  /restapi/product/api.php 
+            .... body contains product in JSON format, e.g.
+               { "name": "LG P880 4X HD",
+                "description": "My first awesome phone!",
+                "price": "336",
+                "category_id": 3}
+            All parameters are required.
+    PUT  /restapi/product/api.php 
+            .... body contains product in JSON format, e.g.
+               {"id" :3,
+                "name": "LG P880 4X HD",
+                "description": "My first awesome phone!",
+                "price": "336",
+                "category_id": 3}
+            All parameters are required. If product does not exist, then it is created.
+    DELETE     /restapi/product/api.php/{id} ... product is deleted
+
+     GET /restapi/category/api.php ..get all categories, with product they contain
+    GET  /restapi/category/api.php/{id} .. get category with id, with products it contains
+    POST  /restapi/category/api.php 
+            .... body contains category in JSON format, e.g.
+             { "name": "Moon",
+                "description": "Category for anything related to the moon.",
+                }
+            All parameters are required.
+    PUT  /restapi/category/api.php 
+            .... body contains category in JSON format, e.g.
+                { "id":2,
+                    "name": "Moon",
+                    "description": "Category for anything related to the moon.",
+                }
+            All parameters are required. If category does not exist, then it is created.
+    DELETE     /restapi/category/api.php/{id} ... category is deleted
+

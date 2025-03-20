@@ -12,13 +12,14 @@ class productController{
 
     private $requestMethod;
     private $productId;
+    private $categoryId;
     private $data;
 
-    public function __construct ($requestMethod, $productId, $data){
+    public function __construct ($requestMethod, $productId, $data, $categoryId){
         $this->requestMethod = $requestMethod;
         $this->productId    = $productId;
         $this->data = $data;
-        
+        $this->categoryId    = $categoryId;
     }
 
     public function processRequest(){
@@ -29,7 +30,13 @@ class productController{
                     $this->handleGetOne();
                 }
                 else{
-                    $this->handleGet();
+                    if ($this->categoryId){
+                        $this->handleGetByCategory();
+                    }
+                    else
+                    {
+                       $this->handleGet();
+                    }
                 }
                 break;
             case 'POST':
@@ -57,6 +64,11 @@ class productController{
             echo $product->readOne($this->productId);
     }
 
+
+    private function handleGetByCategory(){
+        $product = new Product();  
+        echo $product->readAllProductsFromCategoryNotStatic($this->categoryId);
+}
     private function handlePost(){
         $product = new Product();  
         if ($product->create($this->data)){

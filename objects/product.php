@@ -27,11 +27,11 @@ class Product{
     // create product
     function create($data){
         //create product
-        var_dump('snehuliak');
+     
    
         if (!empty($data->name) && !empty($data->price) && !empty($data->description) && !empty($data->category_id))
         {
-            var_dump('not empty');
+           
             $this->name = htmlspecialchars(strip_tags($data->name));
             $this->price = htmlspecialchars(strip_tags($data->price));
             $this->description = htmlspecialchars(strip_tags($data->description));
@@ -157,7 +157,10 @@ class Product{
         }
     } //read
 
-    
+   function readAllProductsFromCategoryNotStatic($categoryId){
+        return json_encode(Product::readAllProductsFromCategory($categoryId, $this->conn));
+   }
+
     static function readAllProductsFromCategory($categoryId, $connection){
         $categoryId = htmlspecialchars(strip_tags($categoryId));
         try{
