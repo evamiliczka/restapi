@@ -4,6 +4,7 @@ use Config\Database;
 
 use PDO;
 
+
 class Product{
     // database connection and table name
     private $conn;
@@ -26,8 +27,11 @@ class Product{
     // create product
     function create($data){
         //create product
+        var_dump('snehuliak');
+   
         if (!empty($data->name) && !empty($data->price) && !empty($data->description) && !empty($data->category_id))
         {
+            var_dump('not empty');
             $this->name = htmlspecialchars(strip_tags($data->name));
             $this->price = htmlspecialchars(strip_tags($data->price));
             $this->description = htmlspecialchars(strip_tags($data->description));
@@ -50,13 +54,14 @@ class Product{
             }
             catch(\PDOException $e) {
                     http_response_code($e->getCode()); 
-                    return json_encode(array("message" => "Create failed: {$e->getMessage()}"));
-                    die(); // Or log the error instead of displaying it
+                    echo json_encode(array("message" => "Create failed: {$e->getMessage()}"));
+                    return false; // Or log the error instead of displaying it
             }
         } //if
         else{
             http_response_code(400); //bad request
-            return json_encode(array("message" => "Unable to create product. Data is incomplete"));
+            echo json_encode(array("message" => "Unable to create product. Data is incomplete"));
+            return false;
         }
     } 
 
@@ -92,13 +97,14 @@ class Product{
             }
             else{// set response code - 404 Not found
                 http_response_code(404);
-                return json_encode(array("message" => "Product {$productId} not found."));
+                echo json_encode(array("message" => "Product {$productId} not found."));
+                return false;
             }
     }  
     catch(\PDOException $e) {
         // Handle error
         http_response_code($e->getCode()); 
-        return json_encode(array("message" => "Query failed:  {$e->getMessage()}"));
+        echo json_encode(array("message" => "Query failed:  {$e->getMessage()}"));
         die(); // Or log the error instead of displaying it
     }
 }
@@ -138,8 +144,9 @@ class Product{
                 // set response code - 404 Not found
                 http_response_code(404);
                 // tell the user no products found
-                return json_encode(array("message" => "No products found.")
-                );
+                echo json_encode(array("message" => "No products found."));
+                return NULL;
+                
             }
         }
         catch(\PDOException $e) {
@@ -186,14 +193,15 @@ class Product{
             }
             catch (\PDOException $e){
                 http_response_code($e->getCode()); 
-                return json_encode(array("message" => "Delete failed:  {$e->getMessage()}"));
+                echo json_encode(array("message" => "Delete failed:  {$e->getMessage()}"));
                 die(); // Or log the error instead of displaying it
             }
         }
         else //no id is given
         {
             http_response_code(400);
-            return json_encode(array("Message"=>"BAd request - ID of product is not given"));
+            echo json_encode(array("Message"=>"BAd request - ID of product is not given"));
+            return false;
         }
          
     }
@@ -229,7 +237,8 @@ class Product{
         }
         else{
             http_response_code(400);
-            return json_encode(array("message" => "Unable to update product. Data is incomplete"));
+            echo json_encode(array("message" => "Unable to update product. Data is incomplete"));
+            return false;
         }
     } //update
 }

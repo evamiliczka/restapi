@@ -59,7 +59,8 @@ class Category{
             }
             else{
                 http_response_code(404); //404 Not found
-                return json_encode(array("message" => "No categories found."));
+                echo json_encode(array("message" => "No categories found."));
+                return false;
             }
         }
         catch(\PDOException $e) {
@@ -100,7 +101,8 @@ class Category{
         } //if
         else{
             http_response_code(400); //bad request
-            return json_encode(array("message" => "Unable to create category. Data is incomplete"));
+            echo json_encode(array("message" => "Unable to create category. Data is incomplete"));
+            return false;
         }
     } //create
 
@@ -133,7 +135,8 @@ class Category{
             }
             else{// set response code - 404 Not found
                 http_response_code(404);
-                return json_encode(array("message" => "Category {$categoryId} not found."));
+                echo json_encode(array("message" => "Category {$categoryId} not found."));
+                return false;
             }
         }
         catch(\PDOException $e) {
@@ -165,7 +168,8 @@ class Category{
             else
             {
                 http_response_code(400);
-                return json_encode(array("message" => "Unable to update category. Data is incomplete"));
+                echo json_encode(array("message" => "Unable to update category. Data is incomplete"));
+                return false;
             }
         }
         catch (\PDOException $e) {
