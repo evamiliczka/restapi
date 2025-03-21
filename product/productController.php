@@ -1,12 +1,7 @@
 <?php
 namespace Controller;
 use  Models\Product;
-
-
-// include database and object files
-include_once __DIR__.'/../objects/product.php';
-
-
+include_once __DIR__.'/../models/product.php';
 
 class productController{
 

@@ -1,9 +1,7 @@
 <?php
 use Controller\categoryController;
 require_once __DIR__.'/../database.php';
-require_once 'categoryController.php';
-
-
+require_once 'categoryController.php'; 
 
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");

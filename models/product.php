@@ -1,9 +1,7 @@
 <?php
 namespace Models;
 use Config\Database;
-
 use PDO;
-
 
 class Product{
     // database connection and table name
@@ -27,11 +25,8 @@ class Product{
     // create product
     function create($data){
         //create product
-     
-   
         if (!empty($data->name) && !empty($data->price) && !empty($data->description) && !empty($data->category_id))
         {
-           
             $this->name = htmlspecialchars(strip_tags($data->name));
             $this->price = htmlspecialchars(strip_tags($data->price));
             $this->description = htmlspecialchars(strip_tags($data->description));
@@ -146,7 +141,6 @@ class Product{
                 // tell the user no products found
                 echo json_encode(array("message" => "No products found."));
                 return NULL;
-                
             }
         }
         catch(\PDOException $e) {
@@ -197,9 +191,7 @@ class Product{
             http_response_code($e->getCode()); 
             echo "Error retrieving products from a category: ".$e->getMessage();
             die();
-          
         }
-
     }
  
 
@@ -207,7 +199,6 @@ class Product{
 
         if ($productId){
             $this->id=htmlspecialchars(strip_tags($productId));
-
             try{
                 $query ="DELETE  FROM {$this->table_name} WHERE id=:id";
                 $stmt = $this->conn->prepare($query);
@@ -229,7 +220,6 @@ class Product{
             echo json_encode(array("Message"=>"BAd request - ID of product is not given"));
             return false;
         }
-         
     }
 
     function update($data){ 

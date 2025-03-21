@@ -3,7 +3,7 @@ namespace Controller;
 
 use Models\Category;
 
-include_once __DIR__.'/../objects/category.php';
+include_once __DIR__.'/../models/category.php';
 
 class categoryController{
 

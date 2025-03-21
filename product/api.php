@@ -2,19 +2,12 @@
 use Controller\productController;
 require_once __DIR__.'/../database.php';
 require_once 'productController.php';
-require_once __DIR__.'/../logger.php';
-
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-
-/* With GET expect request in the form: 
-    GET /restapi/product/api.php ..get all products
-    GET  /restapi/product/api.php/{id} .. get product with id
-    GET  /restapi/product/api.php?category={id} ... list all product from category id */
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = explode( '/', $uri );
 
@@ -37,8 +30,6 @@ else{
 }
 }
 
-
-
 $id = null;
 if (isset($uri[4]))
 {
@@ -53,9 +44,6 @@ if (isset($uri[4]))
         die();
     }
 }
-
-
-
 
 try{
     $controller = new productController($requestMethod, $id, $data, $categoryId);
