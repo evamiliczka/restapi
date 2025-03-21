@@ -3,16 +3,30 @@
 use Config\Database;
 require_once "database.php";
 
-$statements = ["CREATE TABLE IF NOT EXISTS `products` (
+$statements = [   "CREATE TABLE IF NOT EXISTS `categories` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(256) NOT NULL,
+    `description` text NOT NULL,
+    `created` datetime NOT NULL,
+    `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19",
+    "INSERT INTO `categories` (id, `name`, `description`, `created`, `modified`) VALUES(1, 'Fashion', 'Category for anything related to fashion.', 
+    '2014-06-01 00:35:07', '2014-05-30 17:34:33'),(2, 'Electronics', 'Gadgets, drones and more.', '2014-06-01 00:35:07', '2014-05-30 17:34:33'),(3, 
+    'Motors', 'Motor sports and more', '2014-06-01 00:35:07', '2014-05-30 17:34:54'),(5, 'Movies', 'Movie products.', '2016-01-08 13:27:26', '2016-01-08 13:27:26'),(6, 
+    'Books', 'Kindle books, audio books and more.', '2016-01-08 13:27:47', '2016-01-08 13:27:47'),(13, 'Sports', 'Drop into new winter gear.', '2016-01-09 02:24:24',
+     '2016-01-09 01:24:24');",
+     "CREATE TABLE IF NOT EXISTS `products` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `name` varchar(32) NOT NULL,
 `description` text NOT NULL,
 `price` decimal(10,0) NOT NULL,
-`category_id` int(11) NOT NULL,
+`category_id` INT(11) NOT NULL,
 `created` datetime NOT NULL,
 `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10",
+PRIMARY KEY (`id`),
+FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19",
    "INSERT INTO `products` (`id`, `name`, `description`, `price`, `category_id`, `created`, `modified`) VALUES(1, 'LG P880 4X HD', 
    'My first awesome phone!', '336', 3, '2014-06-01 01:12:26', '2014-05-31 17:12:26'),(2, 
    'Google Nexus 4', 'The most awesome phone of 2013!', '299', 2, '2014-06-01 01:12:26', '2014-05-31 17:12:26'),(3, 'Samsung Galaxy S4', 'How about no?', '600', 3, 
@@ -28,20 +42,7 @@ PRIMARY KEY (`id`)
      (31, 'Amanda Waller Shirt', 'New awesome shirt!', '333', 1, '2014-12-13 00:52:54', '2014-12-12 01:52:54'),
      (42, 'Nike Shoes for Men', 'Nike Shoes', '12999', 3, '2015-12-12 06:47:08', '2015-12-12 05:47:08'),(48, 
      'Bristol Shoes', 'Awesome shoes.', '999', 5, '2016-01-08 06:36:37', '2016-01-08 05:36:37'),(60, 'Rolex Watch',
-      'Luxury watch.', '25000', 1, '2016-01-11 15:46:02', '2016-01-11 14:46:02');",
-   "CREATE TABLE IF NOT EXISTS `categories` (
-`id` int(11) NOT NULL AUTO_INCREMENT,
-`name` varchar(256) NOT NULL,
-`description` text NOT NULL,
-`created` datetime NOT NULL,
-`modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19",
-"INSERT INTO `categories` (id, `name`, `description`, `created`, `modified`) VALUES(1, 'Fashion', 'Category for anything related to fashion.', 
-'2014-06-01 00:35:07', '2014-05-30 17:34:33'),(2, 'Electronics', 'Gadgets, drones and more.', '2014-06-01 00:35:07', '2014-05-30 17:34:33'),(3, 
-'Motors', 'Motor sports and more', '2014-06-01 00:35:07', '2014-05-30 17:34:54'),(5, 'Movies', 'Movie products.', '2016-01-08 13:27:26', '2016-01-08 13:27:26'),(6, 
-'Books', 'Kindle books, audio books and more.', '2016-01-08 13:27:47', '2016-01-08 13:27:47'),(13, 'Sports', 'Drop into new winter gear.', '2016-01-09 02:24:24',
- '2016-01-09 01:24:24');"];
+      'Luxury watch.', '25000', 1, '2016-01-11 15:46:02', '2016-01-11 14:46:02');"];
 
 try {
     $database = new Database();
