@@ -1,59 +1,25 @@
 <?php
+
 use Controller\categoryController;
-require_once __DIR__.'/../database.php';
-require_once 'categoryController.php'; 
+use Api\ApiInitializer;
+use Api\ApiUtils;
+require_once __DIR__ . '/../database.php';
+require_once __DIR__ . '/../api/api.php';
+require_once __DIR__.'/../category/categoryController.php';
 
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+ApiInitializer::setHeaders();
 
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$uri = explode( '/', $uri );
+$parsedUrlSegments = ApiInitializer::parseUrlPath();
+$requestMethod = ApiInitializer::getRequestMethod();
+$requestData = ApiInitializer::getRequestData();
+var_dump($parsedUrlSegments[4]);
+$categoryId = isset($parsedUrlSegments[4]) ? ApiUtils::validateId($parsedUrlSegments[4]) : null;
 
-$data = json_decode(file_get_contents('php://input'));
-
-$requestMethod = $_SERVER["REQUEST_METHOD"];
-
-$id = null;
-
-
-if (isset($uri[4]))
-{
-    // if last elment is set, it must be a number = an id
-    if (empty($uri[4]) || intval($uri[4]) !== 0)
-         {
-            if (intval($uri[4]) !== 0) $id = intval($uri[4]);
-        }
-    else{
-        http_response_code(400); //bad request
-        echo json_encode(['message' => 'Bad request expected /restapi/category/{id} where id is an integer']);
-        die();
-    }
-}
-
-
-// var_dump($uri);
-// authenticate the request with Okta:
-// if (! authenticate()) {
-//     header("HTTP/1.1 401 Unauthorized");
-//     exit('Unauthorized');
-// }
-
-
-// for now all of our endpoints start with /product
-// everything else results in a 404 Not Found
-try{
-    $controller = new categoryController($requestMethod, $id, $data);
+try {
+    $controller = new categoryController($requestMethod, $categoryId, $requestData);
     $controller->processRequest();
-}
-catch (\PDOException $e){
-    http_response_code($e->getCode()); 
-    echo json_encode(array("message" => $e->getMessage()));
+} catch (PDOException $e) {
+    http_response_code($e->getCode());
+    echo json_encode(["message" => $e->getMessage()]);
     exit();
 }
-
-
-
-

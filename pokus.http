@@ -1,0 +1,25 @@
+### GET request to example server
+GET http://localhost:8888/restapi/category/api.php/1
+
+### GET request to example server
+GET http://localhost:8888/restapi/product/api.php/
+
+###
+POST http://localhost:8888/restapi/product/api.php/
+Content-Type: application/json
+
+{
+  "name": "Bench Shirt",
+  "description": "The best shirt!",
+  "price": "29",
+  "category_id": "1"
+}
+
+###
+POST http://localhost:8888/restapi/category/api.php/
+Content-Type: application/json
+
+{  "name": "Beauty",
+  "description": "Category for anything related to beauty."
+}
+###
